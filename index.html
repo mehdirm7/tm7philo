@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PHILO AI</title>
+
+<style>
+
+:root{
+
+ --bg:#f3f8f4;
+
+ --card:#ffffff;
+
+ --text:#17251d;
+
+ --muted:#78877e;
+
+ --green:#629d7b;
+
+ --mist:rgba(98,157,123,.13);
+
+ --border:rgba(98,157,123,.23);
+
+}
+
+body.dark{
+
+ --bg:#101713;
+
+ --card:#1a251e;
+
+ --text:#edf5ef;
+
+ --muted:#a3b2a8;
+
+ --green:#80c49a;
+
+ --mist:rgba(128,196,154,.12);
+
+ --border:rgba(128,196,154,.22);
+
+}
+
+*{box-sizing:border-box}
+
+body{
+
+ margin:0;
+
+ background:var(--bg);
+
+ color:var(--text);
+
+ font-family:Arial,sans-serif;
+
+ transition:.3s;
+
+}
+
+header{
+
+ display:flex;
+
+ justify-content:space-between;
+
+ align-items:center;
+
+ padding:20px 6%;
+
+ background:var(--card);
+
+ border-bottom:1px solid var(--border);
+
+}
+
+.logo{
+
+ font-size:26px;
+
+ font-weight:900;
+
+ letter-spacing:2px;
+
+}
+
+.logo span{color:var(--green)}
+
+.controls{display:flex;gap:9px}
+
+button,select{
+
+ cursor:pointer;
+
+ font-family:inherit;
+
+}
+
+.control-btn{
+
+ background:var(--mist);
+
+ border:1px solid var(--border);
+
+ border-radius:12px;
+
+ padding:11px 15px;
+
+ color:var(--text);
+
+ font-size:15px;
+
+}
+
+.hero{
+
+ text-align:center;
+
+ padding:65px 18px 40px;
+
+ background:radial-gradient(ellipse at top,var(--mist),transparent 70%);
+
+}
+
+.hero h1{
+
+ font-size:clamp(34px,6vw,55px);
+
+ margin:0 0 15px;
+
+}
+
+.hero h1 span{color:var(--green)}
+
+.hero p{
+
+ color:var(--muted);
+
+ line-height:1.8;
+
+ font-size:16px;
+
+}
+
+.container{
+
+ max-width:950px;
+
+ margin:20px auto;
+
+ padding:15px;
+
+}
+
+.card{
+
+ background:var(--card);
+
+ border:1px solid var(--border);
+
+ border-radius:22px;
+
+ padding:25px;
+
+ box-shadow:0 10px 35px var(--mist);
+
+}
+
+.section-title{
+
+ font-size:21px;
+
+ margin-bottom:20px;
+
+}
+
+.section-label{
+
+ display:block;
+
+ font-weight:bold;
+
+ margin:22px 0 13px;
+
+}
+
+.modes{
+
+ display:grid;
+
+ grid-template-columns:repeat(2,minmax(0,1fr));
+
+ gap:12px;
+
+}
+
+.mode-btn{
+
+ background:var(--bg);
+
+ color:var(--text);
+
+ border:1px solid var(--border);
+
+ border-radius:14px;
+
+ padding:17px 10px;
+
+ min-height:100px;
+
+ text-align:center;
+
+ transition:.2s;
+
+}
+
+.mode-btn .emoji{
+
+ display:block;
+
+ font-size:27px;
+
+ margin-bottom:9px;
+
+}
+
+.mode-btn .mode-name{
+
+ display:block;
+
+ font-weight:bold;
+
+ font-size:14px;
+
+}
+
+.mode-btn.active{
+
+ background:var(--mist);
+
+ border:2px solid var(--green);
+
+ box-shadow:0 0 15px var(--mist);
+
+}
+
+.mode-btn:hover{border-color:var(--green)}
+
+textarea,select{
+
+ width:100%;
+
+ padding:16px;
+
+ border-radius:13px;
+
+ border:1px solid var(--border);
+
+ background:var(--bg);
+
+ color:var(--text);
+
+ font-size:16px;
+
+ outline:none;
+
+}
+
+textarea{
+
+ min-height:160px;
+
+ resize:vertical;
+
+ line-height:1.7;
+
+}
+
+textarea:focus,select:focus{
+
+ border-color:var(--green);
+
+}
+
+.generate{
+
+ width:100%;
+
+ margin-top:23px;
+
+ padding:17px;
+
+ background:var(--green);
+
+ color:white;
+
+ border:0;
+
+ border-radius:13px;
+
+ font-size:17px;
+
+ font-weight:bold;
+
+}
+
+.generate:disabled{opacity:.6}
+
+.status{
+
+ text-align:center;
+
+ margin-top:15px;
+
+ color:var(--muted);
+
+ line-height:1.7;
+
+}
+
+.result{
+
+ display:none;
+
+ margin-top:25px;
+
+ padding:22px;
+
+ background:var(--mist);
+
+ border:1px solid var(--border);
+
+ border-radius:15px;
+
+}
+
+.result h3{color:var(--green)}
+
+#answer{
+
+ white-space:pre-wrap;
+
+ line-height:1.9;
+
+ overflow-wrap:anywhere;
+
+}
+
+.copy-btn{
+
+ margin-top:20px;
+
+ background:var(--green);
+
+ color:white;
+
+ border:0;
+
+ padding:12px 20px;
+
+ border-radius:10px;
+
+}
+
+.features{
+
+ display:grid;
+
+ grid-template-columns:repeat(3,1fr);
+
+ gap:14px;
+
+ margin:30px 0;
+
+}
+
+.feature{
+
+ background:var(--card);
+
+ border:1px solid var(--border);
+
+ border-radius:17px;
+
+ padding:22px 12px;
+
+ text-align:center;
+
+}
+
+.feature .emoji{font-size:30px}
+
+.feature h3{color:var(--green)}
+
+.feature p{
+
+ color:var(--muted);
+
+ font-size:13px;
+
+ line-height:1.6;
+
+}
+
+footer{
+
+ text-align:center;
+
+ padding:35px 15px;
+
+ color:var(--muted);
+
+ border-top:1px solid var(--border);
+
+}
+
+footer a{
+
+ color:var(--green);
+
+ text-decoration:none;
+
+ font-weight:bold;
+
+}
+
+[dir="rtl"] .card,
+
+[dir="rtl"] .feature{text-align:right}
+
+[dir="rtl"] .mode-btn{text-align:center}
+
+@media(max-width:600px){
+
+ header{padding:15px}
+
+ .logo{font-size:21px}
+
+ .hero{padding-top:45px}
+
+ .card{padding:18px}
+
+ .features{grid-template-columns:1fr}
+
+ .mode-btn{min-height:95px}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+ <div class="logo">PHILO<span> AI.</span></div>
+
+ <div class="controls">
+
+  <button class="control-btn" id="themeBtn">🌙</button>
+
+  <button class="control-btn" id="langBtn">العربية</button>
+
+ </div>
+
+</header>
+
+<section class="hero">
+
+ <h1 id="heroTitle">Explorez la <span>Philosophie</span></h1>
+
+ <p id="heroDesc">
+
+ Votre assistant intelligent pour toutes les tâches philosophiques.
+
+ </p>
+
+</section>
+
+<main class="container">
+
+<div class="card">
+
+ <h2 class="section-title" id="mainTitle">
+
+ ✦ Assistant philosophique intelligent
+
+ </h2>
+
+ <label class="section-label" id="modeLabel">
+
+ Choisissez un service :
+
+ </label>
+
+ <div class="modes" id="modes">
+
+  <button class="mode-btn active" data-mode="essay">
+
+   <span class="emoji">📚</span>
+
+   <span class="mode-name" data-key="essay">Dissertation philosophique</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="debate">
+
+   <span class="emoji">⚖️</span>
+
+   <span class="mode-name" data-key="debate">Article argumentatif</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="compare">
+
+   <span class="emoji">🔄</span>
+
+   <span class="mode-name" data-key="compare">Comparaison philosophique</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="analyze">
+
+   <span class="emoji">🧠</span>
+
+   <span class="mode-name" data-key="analyze">Analyse d'un texte</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="solve">
+
+   <span class="emoji">✍️</span>
+
+   <span class="mode-name" data-key="solve">Résolution d'un sujet</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="intro">
+
+   <span class="emoji">📝</span>
+
+   <span class="mode-name" data-key="intro">Introduction et conclusion</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="plan">
+
+   <span class="emoji">📋</span>
+
+   <span class="mode-name" data-key="plan">Plan détaillé</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="explain">
+
+   <span class="emoji">💡</span>
+
+   <span class="mode-name" data-key="explain">Explication d'un concept</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="philosopher">
+
+   <span class="emoji">👨‍🎓</span>
+
+   <span class="mode-name" data-key="philosopher">Étude d'un philosophe</span>
+
+  </button>
+
+  <button class="mode-btn" data-mode="arguments">
+
+   <span class="emoji">🎯</span>
+
+   <span class="mode-name" data-key="arguments">Arguments et exemples</span>
+
+  </button>
+
+ </div>
+
+ <label class="section-label" id="questionLabel">
+
+ Votre sujet ou votre question :
+
+ </label>
+
+ <textarea id="question"
+
+ placeholder="Écrivez votre sujet philosophique ici..."></textarea>
+
+ <label class="section-label" id="levelLabel">
+
+ Niveau :
+
+ </label>
+
+ <select id="level">
+
+  <option value="secondary">Lycée / Baccalauréat</option>
+
+  <option value="university">Université</option>
+
+  <option value="simple">Explication simple</option>
+
+  <option value="advanced">Approfondi</option>
+
+ </select>
+
+ <button class="generate" id="generateBtn">
+
+ ✦ Générer avec l'intelligence artificielle
+
+ </button>
+
+ <div class="status" id="status"></div>
+
+ <div class="result" id="result">
+
+  <h3 id="resultTitle">✦ Votre réponse</h3>
+
+  <div id="answer"></div>
+
+  <button class="copy-btn" id="copyBtn">📋 Copier la réponse</button>
+
+ </div>
+
+</div>
+
+<div class="features">
+
+ <div class="feature">
+
+  <div class="emoji">📚</div>
+
+  <h3 id="feature1">Dissertations</h3>
+
+  <p id="desc1">Des articles philosophiques complets et organisés.</p>
+
+ </div>
+
+ <div class="feature">
+
+  <div class="emoji">🧠</div>
+
+  <h3 id="feature2">Analyse</h3>
+
+  <p id="desc2">Analyse de textes, thèses et arguments.</p>
+
+ </div>
+
+ <div class="feature">
+
+  <div class="emoji">💡</div>
+
+  <h3 id="feature3">Apprentissage</h3>
+
+  <p id="desc3">Découvrir les philosophes et leurs idées.</p>
+
+ </div>
+
+</div>
+
+</main>
+
+<footer>
+
+ <p>PHILO AI © 2026</p>
+
+ <p id="follow">Suivez-moi sur Instagram :</p>
+
+ <a href="https://www.instagram.com/https__.tm7/"
+
+ target="_blank">@https__.tm7</a>
+
+ <p>Philosophie • Intelligence Artificielle</p>
+
+</footer>
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+let lang = "fr";
+
+let selectedMode = "essay";
+
+const translations = {
+
+ fr:{
+
+  hero:'Explorez la <span>Philosophie</span>',
+
+  desc:'Votre assistant intelligent pour toutes les tâches philosophiques.',
+
+  main:'✦ Assistant philosophique intelligent',
+
+  mode:'Choisissez un service :',
+
+  question:'Votre sujet ou votre question :',
+
+  placeholder:'Écrivez votre sujet philosophique ici...',
+
+  level:'Niveau :',
+
+  generate:"✦ Générer avec l'intelligence artificielle",
+
+  result:'✦ Votre réponse',
+
+  copy:'📋 Copier la réponse',
+
+  follow:'Suivez-moi sur Instagram :',
+
+  empty:'Veuillez écrire votre sujet ou votre question.',
+
+  loading:'⏳ Réflexion philosophique en cours...',
+
+  error:'Impossible de contacter le serveur IA. Vérifiez sa configuration.',
+
+  copied:'Réponse copiée !',
+
+  modes:{
+
+   essay:'Dissertation philosophique',
+
+   debate:'Article argumentatif',
+
+   compare:'Comparaison philosophique',
+
+   analyze:"Analyse d'un texte",
+
+   solve:"Résolution d'un sujet",
+
+   intro:'Introduction et conclusion',
+
+   plan:'Plan détaillé',
+
+   explain:"Explication d'un concept",
+
+   philosopher:"Étude d'un philosophe",
+
+   arguments:'Arguments et exemples'
+
+  },
+
+  features:['Dissertations','Analyse','Apprentissage'],
+
+  descriptions:[
+
+   'Des articles philosophiques complets et organisés.',
+
+   'Analyse de textes, thèses et arguments.',
+
+   'Découvrir les philosophes et leurs idées.'
+
+  ],
+
+  levels:['Lycée / Baccalauréat','Université','Explication simple','Approfondi']
+
+ },
+
+ ar:{
+
+  hero:'اكتشف عالم <span>الفلسفة</span>',
+
+  desc:'مساعدك الذكي لكل ما يتعلق بالفلسفة.',
+
+  main:'✦ المساعد الفلسفي الذكي',
+
+  mode:'اختر الخدمة التي تريدها:',
+
+  question:'اكتب موضوعك أو سؤالك:',
+
+  placeholder:'اكتب موضوعك الفلسفي هنا...',
+
+  level:'المستوى:',
+
+  generate:'✦ أنشئ باستخدام الذكاء الاصطناعي',
+
+  result:'✦ إجابتك',
+
+  copy:'📋 نسخ الإجابة',
+
+  follow:'تابعني على إنستغرام:',
+
+  empty:'يرجى كتابة الموضوع أو السؤال أولاً.',
+
+  loading:'⏳ جارٍ التفكير والتحليل...',
+
+  error:'تعذر الاتصال بخادم الذكاء الاصطناعي. تحقق من الإعدادات.',
+
+  copied:'تم نسخ الإجابة!',
+
+  modes:{
+
+   essay:'مقالة فلسفية',
+
+   debate:'إنشاء مقال جدلي',
+
+   compare:'المقارنة الفلسفية',
+
+   analyze:'تحليل نص فلسفي',
+
+   solve:'حل موضوع فلسفي',
+
+   intro:'إنشاء مقدمة وخاتمة',
+
+   plan:'إنشاء خطة مفصلة',
+
+   explain:'شرح مفهوم فلسفي',
+
+   philosopher:'دراسة فيلسوف',
+
+   arguments:'الحجج والأمثلة'
+
+  },
+
+  features:['المقالات الفلسفية','التحليل','التعلم'],
+
+  descriptions:[
+
+   'إنشاء مقالات فلسفية كاملة ومنظمة.',
+
+   'تحليل النصوص والأطروحات والحجج.',
+
+   'اكتشاف الفلاسفة وأفكارهم.'
+
+  ],
+
+  levels:['الثانوي / البكالوريا','الجامعة','شرح مبسط','متقدم']
+
+ }
+
+};
+
+function renderLanguage(){
+
+ const t=translations[lang];
+
+ document.documentElement.lang=lang;
+
+ document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+
+ $('heroTitle').innerHTML=t.hero;
+
+ $('heroDesc').textContent=t.desc;
+
+ $('mainTitle').textContent=t.main;
+
+ $('modeLabel').textContent=t.mode;
+
+ $('questionLabel').textContent=t.question;
+
+ $('question').placeholder=t.placeholder;
+
+ $('levelLabel').textContent=t.level;
+
+ $('generateBtn').textContent=t.generate;
+
+ $('resultTitle').textContent=t.result;
+
+ $('copyBtn').textContent=t.copy;
+
+ $('follow').textContent=t.follow;
+
+ $('langBtn').textContent=lang==='fr'?'العربية':'Français';
+
+ document.querySelectorAll('.mode-btn').forEach(btn=>{
+
+  const key=btn.dataset.mode;
+
+  btn.querySelector('.mode-name').textContent=t.modes[key];
+
+ });
+
+ $('feature1').textContent=t.features[0];
+
+ $('feature2').textContent=t.features[1];
+
+ $('feature3').textContent=t.features[2];
+
+ $('desc1').textContent=t.descriptions[0];
+
+ $('desc2').textContent=t.descriptions[1];
+
+ $('desc3').textContent=t.descriptions[2];
+
+ const options=$('level').options;
+
+ for(let i=0;i<options.length;i++){
+
+  options[i].textContent=t.levels[i];
+
+ }
+
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn=>{
+
+ btn.addEventListener('click',()=>{
+
+  selectedMode=btn.dataset.mode;
+
+  document.querySelectorAll('.mode-btn').forEach(b=>{
+
+   b.classList.remove('active');
+
+  });
+
+  btn.classList.add('active');
+
+ });
+
+});
+
+$('themeBtn').addEventListener('click',()=>{
+
+ document.body.classList.toggle('dark');
+
+ $('themeBtn').textContent=
+
+ document.body.classList.contains('dark')?'☀️':'🌙';
+
+});
+
+$('langBtn').addEventListener('click',()=>{
+
+ lang=lang==='fr'?'ar':'fr';
+
+ renderLanguage();
+
+});
+
+$('generateBtn').addEventListener('click',generate);
+
+async function generate(){
+
+ const t=translations[lang];
+
+ const question=$('question').value.trim();
+
+ if(!question){
+
+  $('status').textContent=t.empty;
+
+  $('question').focus();
+
+  return;
+
+ }
+
+ $('generateBtn').disabled=true;
+
+ $('result').style.display='none';
+
+ $('status').textContent=t.loading;
+
+ try{
+
+  const response=await fetch('/api/ai',{
+
+   method:'POST',
+
+   headers:{'Content-Type':'application/json'},
+
+   body:JSON.stringify({
+
+    question:question,
+
+    mode:selectedMode,
+
+    level:$('level').value,
+
+    language:lang
+
+   })
+
+  });
+
+  if(!response.ok) throw new Error('Server error');
+
+  const data=await response.json();
+
+  if(!data.answer) throw new Error('No answer');
+
+  $('answer').textContent=data.answer;
+
+  $('result').style.display='block';
+
+  $('status').textContent='';
+
+ }catch(error){
+
+  $('status').textContent=t.error;
+
+ }finally{
+
+  $('generateBtn').disabled=false;
+
+ }
+
+}
+
+$('copyBtn').addEventListener('click',async()=>{
+
+ try{
+
+  await navigator.clipboard.writeText($('answer').textContent);
+
+  $('status').textContent=translations[lang].copied;
+
+ }catch(e){
+
+  $('status').textContent='Copy unavailable';
+
+ }
+
+});
+
+renderLanguage();
+
+</script>
+
+</body>
+
+</html>
